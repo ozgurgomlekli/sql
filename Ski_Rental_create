@@ -1,0 +1,131 @@
+-- In this project I created a Ski rental database and execute some key queries:
+use Kayak
+
+CREATE TABLE [dbo].[Uyeler](
+	[uyeID] [int] IDENTITY(1,1) NOT NULL,
+	[Tc] [char](11) NOT NULL,
+	[Ad] [varchar](50) NULL,
+	[Soyad] [varchar](40) NULL,
+	[Adres1] [int] NULL,
+	[Adres2] [int] NULL,
+ CONSTRAINT [PK_Uyeler] PRIMARY KEY CLUSTERED 
+(
+	[uyeID] ASC
+)
+
+CREATE TABLE [dbo].[UyeAdresleri](
+	[AdresId] [int] IDENTITY(1,1) NOT NULL,
+	[UyeId] [int] NULL,
+	[Adres] [varchar](150) NULL,
+ CONSTRAINT [PK_UyeAdresleri] PRIMARY KEY CLUSTERED 
+(
+	[AdresId] ASC
+)
+GO
+
+ALTER TABLE [dbo].[UyeAdresleri]  WITH CHECK ADD  CONSTRAINT [FK_UyeAdresleri_Uyeler] FOREIGN KEY([UyeId])
+REFERENCES [dbo].[Uyeler] ([uyeID])
+
+
+CREATE TABLE [dbo].[Ekipman_islem](
+	[islem_id] [int] IDENTITY(1,1) NOT NULL,
+	[ekipman_id] [int] NULL,
+	[uye_id] [int] NULL,
+	[ucret] [float] NULL,
+	[Alma_tarih] [date] NULL,
+	[iade_tarih] [date] NULL,
+ CONSTRAINT [PK_Ekipman_islem] PRIMARY KEY CLUSTERED 
+(
+	[islem_id] ASC)
+  GO
+
+ALTER TABLE [dbo].[Ekipman_islem]  WITH CHECK ADD  CONSTRAINT [FK_Ekipman_islem_Ekipman] FOREIGN KEY([ekipman_id])
+REFERENCES [dbo].[Ekipman] ([EkipmanId])
+
+GO
+
+ALTER TABLE [dbo].[Ekipman_islem]  WITH CHECK ADD  CONSTRAINT [FK_Ekipman_islem_Uyeler] FOREIGN KEY([uye_id])
+REFERENCES [dbo].[Uyeler] ([uyeID])
+
+
+CREATE TABLE [dbo].[Ekipman](
+	[EkipmanId] [int] IDENTITY(1,1) NOT NULL,
+	[EkipmanAdi] [varchar](60) NULL,
+	[EkipmanTuru] [int] NULL,
+	[EkipmanUcreti] [float] NULL,
+	[EkipmanDurum] [varchar](10) NULL,
+ CONSTRAINT [PK_Ekipman] PRIMARY KEY CLUSTERED 
+(
+	[EkipmanId] ASC)
+ GO
+
+ALTER TABLE [dbo].[Ekipman]  WITH CHECK ADD  CONSTRAINT [FK_Ekipman_EkipmanTuru] FOREIGN KEY([EkipmanTuru])
+REFERENCES [dbo].[EkipmanTuru] ([TurId])
+
+CREATE TABLE [dbo].[EkipmanTuru](
+	[TurId] [int] IDENTITY(1,1) NOT NULL,
+	[TurAdi] [varchar](30) NULL,
+ CONSTRAINT [PK_EkipmanTuru] PRIMARY KEY CLUSTERED 
+(
+	[TurId] ASC
+)
+
+CREATE TABLE [dbo].[Pist](
+	[PistId] [int] IDENTITY(1,1) NOT NULL,
+	[PistAdi] [varchar](60) NULL,
+	[PistSeviyesi] [int] NULL,
+	[PistUcreti] [float] NULL,
+ CONSTRAINT [PK_Pist] PRIMARY KEY CLUSTERED 
+(
+	[PistId] ASC
+)
+ 
+ CREATE TABLE [dbo].[Teleferik](
+	[TeleferikId] [int] IDENTITY(1,1) NOT NULL,
+	[PistId] [int] NULL,
+	[TeleferikAdi] [varchar](50) NULL,
+	[TeleferikTuru] [varchar](10) NULL,
+	[TeleferikKapasite] [int] NULL,
+	[TeleferikAktiflik] [varchar](5) NULL,
+ CONSTRAINT [PK_Teleferik] PRIMARY KEY CLUSTERED 
+(
+	[TeleferikId] ASC
+)
+GO
+
+ALTER TABLE [dbo].[Teleferik]  WITH CHECK ADD  CONSTRAINT [FK_Teleferik_Pist] FOREIGN KEY([PistId])
+REFERENCES [dbo].[Pist] ([PistId])
+
+ CREATE TABLE [dbo].[Kart](
+	[KartId] [int] IDENTITY(1,1) NOT NULL,
+	[UyeId] [int] NULL,
+	[KartYıl] [varchar](4) NULL,
+ CONSTRAINT [PK_Kart] PRIMARY KEY CLUSTERED 
+(
+	[KartId] ASC
+)
+GO
+
+ALTER TABLE [dbo].[Kart]  WITH CHECK ADD  CONSTRAINT [FK_Kart_Uyeler] FOREIGN KEY([UyeId])
+REFERENCES [dbo].[Uyeler] ([uyeID])
+
+ CREATE TABLE [dbo].[PistIslem](
+	[IslemId] [int] IDENTITY(1,1) NOT NULL,
+	[KartId] [int] NULL,
+	[PistId] [int] NULL,
+	[SonTarih] [date] NULL,
+ CONSTRAINT [PK_PistIslem] PRIMARY KEY CLUSTERED 
+(
+	[IslemId] ASC
+)
+
+GO
+
+ALTER TABLE [dbo].[PistIslem]  WITH CHECK ADD  CONSTRAINT [FK_PistIslem_Kart] FOREIGN KEY([KartId])
+REFERENCES [dbo].[Kart] ([KartId])
+
+GO
+
+ALTER TABLE [dbo].[PistIslem]  WITH CHECK ADD  CONSTRAINT [FK_PistIslem_Pist] FOREIGN KEY([PistId])
+REFERENCES [dbo].[Pist] ([PistId])
+ 

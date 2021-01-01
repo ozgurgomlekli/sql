@@ -1,0 +1,44 @@
+1)
+
+select p.PistId,u.Ad, u.Soyad from PistIslem as  p
+inner join Kart as k on k.KartId=p.KartId
+inner join Uyeler as u on u.uyeID = k.UyeId
+where p.PistId 
+
+in( select t.PistId from Teleferik as t 
+
+group by t.PistId
+having count(t.TeleferikAdi)>=3)
+
+2)
+
+select u.Ad,u.Soyad,sum(ei.ucret) as [Toplam_Ucret]
+from Ekipman_islem as ei
+inner join Uyeler as u on u.uyeID =ei.uye_id
+
+group by u.Ad, u.Soyad
+order by sum(ei.ucret) desc
+
+
+3)
+
+select p.PistId,count(t.TeleferikId) from Pist as p
+inner join Teleferik as t on t.PistId =p.PistId
+group by p.PistId
+
+4)
+
+select k.KartYıl,sum(p.PistUcreti) from Pist as p 
+inner join PistIslem as pis on p.PistId= pis.PistId
+inner join Kart as k on k.KartId =pis.KartId
+
+group by k.KartYıl
+
+5)
+
+select u.Tc from Uyeler as u
+
+where u.uyeID in 
+(select uyeID from Ekipman_islem)
+ and  u.uyeID in (select  UyeId from Kart) 
+
